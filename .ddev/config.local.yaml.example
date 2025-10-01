@@ -1,0 +1,64 @@
+web_environment:
+  - COMPOSER_EXIT_ON_PATCH_FAILURE=1
+  # Un comment when working on a migration and the source is different DDEV
+  # installation. And Change the `SomeName` to match the remote source.
+  # This is used in setting.ddev.php
+  # see https://github.com/Gizra/drupal-starter/blob/d9a29f739e7a24a3598207bb51cf7fc01b1c495c/web/sites/default/settings.ddev.php#L31-L33
+  # - DDEV_MIGRATE_REMOTE_SOURCE=ddev-SomeName-db
+hooks:
+  post-start:
+    # Private files directory.
+    - exec: mkdir -p /var/www/private
+
+    # Create a private key for Two-factor Authentication if not yet added.
+    - exec-host: ddev set-tfa-key
+
+    # Install profile
+    - exec: drush site-install server -y --existing-config
+
+    # Import translations.
+    - exec: robo locale:import
+
+    # Compile theme in debug, so we can develop with all Tailwinds' classes.
+    # On deploy, we purge un-needed CSS.
+    - exec-host: ddev robo theme:compile-debug
+
+    # Install the default content.
+    - exec: drush pm-enable default_content --no-interaction
+    - exec: drush pm-enable server_default_content --no-interaction
+    # Uninstall the default content module (it is no longer needed).
+    - exec: drush pm-uninstall server_default_content default_content --no-interaction
+
+    # Set the homepage.
+    - exec: drush set-homepage
+
+    # Clear cache, for example for entity view builder plugins to take effect.
+    - exec: drush cr
+
+    # Index content.
+    - exec: drush sapi-c
+    - exec: drush sapi-i
+
+    # Enable Devel.
+    - exec: drush pm-enable devel -y
+
+    # @see https://www.drupal.org/node/947312
+    - exec: drush user-block --uid=1
+
+    # Login as AdminOne.
+    - exec-host: ddev login
+
+  post-import-db:
+    # Run DB updates.
+    - exec: drush updb
+    # Clear cache before config import.
+    - exec: drush cr
+    # Import config.
+    - exec: drush cim -y
+    # Reindex.
+    - exec: drush sapi-c
+    - exec: drush sapi-i
+    # Compile theme.
+    - exec-host: ddev robo theme:compile
+    # Login as admin.
+    - exec-host: ddev login
