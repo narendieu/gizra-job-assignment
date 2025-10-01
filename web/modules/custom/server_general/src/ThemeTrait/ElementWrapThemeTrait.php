@@ -593,5 +593,54 @@ trait ElementWrapThemeTrait {
 
     return array_filter($element);
   }
+  
+  
+  
+    /**
+   * Wrap an element with an Admin badge.
+   *
+   * @param string|\Drupal\Core\StringTranslation\TranslatableMarkup $label
+   *   The text label, e.g. "Admin".
+   *
+   * @return array
+   *   Render array.
+   */
+  protected function wrapAdminBadge(array|string|TranslatableMarkup $label): array {
+    if (empty($label)) {
+      return [];
+    }
+	
+
+    return [
+      '#theme' => 'server_theme_admin_badge',
+      '#element' => $label,
+    ];
+  }
+
+ 
+
+  /**
+   * Wrap two contact buttons (Email + Call) into an actions row.
+   *
+   * @param array $email
+   *   Render array for the email button.
+   * @param array $call
+   *   Render array for the call button.
+   *
+   * @return array
+   *   Render array.
+   */
+  protected function wrapContactActions( string $email, string $call): array {
+    if (empty($email) && empty($call)) {
+      return [];
+    }
+    
+    return [
+      '#theme' => 'server_theme_contact_actions',
+      '#email' => $email,
+      '#call' => $call,
+    ];
+  }
+
 
 }

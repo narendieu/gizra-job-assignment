@@ -20,12 +20,14 @@ use Drupal\server_general\ThemeTrait\Enum\HtmlTagEnum;
 use Drupal\server_general\ThemeTrait\InfoCardThemeTrait;
 use Drupal\server_general\ThemeTrait\NewsTeasersThemeTrait;
 use Drupal\server_general\ThemeTrait\PeopleTeasersThemeTrait;
+use Drupal\server_general\ThemeTrait\PersonCardsThemeTrait;
 use Drupal\server_general\ThemeTrait\QuickLinksThemeTrait;
 use Drupal\server_general\ThemeTrait\QuoteThemeTrait;
 use Drupal\server_general\ThemeTrait\SearchThemeTrait;
 use Drupal\server_general\WebformTrait;
 use Drupal\server_style_guide\ThemeTrait\StyleGuideElementWrapThemeTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Render\Markup;
 
 /**
  * Provides route responses for the style-guide module.
@@ -43,6 +45,7 @@ class StyleGuideController extends ControllerBase {
   use InfoCardThemeTrait;
   use NewsTeasersThemeTrait;
   use PeopleTeasersThemeTrait;
+  use PersonCardsThemeTrait;
   use QuickLinksThemeTrait;
   use QuoteThemeTrait;
   use SearchThemeTrait;
@@ -194,6 +197,11 @@ class StyleGuideController extends ControllerBase {
 
     $element = $this->getWebformElement();
     $build[] = $this->wrapElementNoContainer($element, 'Element: Webform');
+	
+	
+	
+	$element = $this->getPeopleCards(TRUE);
+    $build[] = $this->wrapElementNoContainer($element, 'Element: Person Cards');
 
     return $build;
   }
@@ -917,5 +925,45 @@ class StyleGuideController extends ControllerBase {
       $this->buildProcessedText('Decorate one package of cauliflower in six teaspoons of plain vinegar. Try flavoring the crême fraîche gingers with clammy rum and fish sauce, simmered.'),
     );
   }
+  
+  
+  
+  protected function getPeopleCards(): array {
+    $items = [];
+
+    $names = [
+      'Jon Doe',
+		'Smith Allen',
+		'David Bowie',
+		'Rick Morty',
+		'Sara Connor',
+		'Tony Stark',
+		'Bruce Wayne',
+		'Clark Kent',
+		'Diana Prince',
+		'Peter Parker',
+    ];
+    foreach ($names as $key => $name) {
+      $items[] = $this->buildElementPersonCard(
+        $this->getPlaceholderPersonImage(100),
+        'The image alt ' . $name,
+        $name,
+        'Paradigm Representative',
+      );
+
+    }
+
+    return $this->buildElementPersonCards(
+      '',
+      $this->buildProcessedText(''),
+      $items,
+    );
+  }
+  
+  
+  
+	
+
+
 
 }
