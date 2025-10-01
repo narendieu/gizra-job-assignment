@@ -1,0 +1,10 @@
+services:
+  pevb.subscribe_access:
+    class: Drupal\pevb\Access\SubscribeAccessCheck
+    arguments: ['@current_user', '@og.membership_manager', '@og.group_type_manager']
+    tags:
+      - { name: access_check, applies_to: _og_subscribe_access }
+
+  pevb.csrf:
+    class: Drupal\pevb\Security\LinkToken
+    arguments: ['@csrf_token']

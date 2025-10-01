@@ -1,0 +1,8 @@
+pevb.subscribe:
+  path: '/group/node/{node}/subscribe'
+  defaults:
+    _controller: '\Drupal\pevb\Controller\SubscribeController::subscribe'
+    _title: 'Subscribe to group'
+  requirements:
+    _permission: 'access content'
+    _entity_access: 'node.view'
