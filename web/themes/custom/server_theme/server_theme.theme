@@ -510,6 +510,26 @@ function server_theme_theme() {
   $info['server_theme_footer'] = [
     'variables' => [],
   ];
+  
+  
+  // Wrapper for badge in person cards.
+  $info['server_theme_admin_badge'] = [
+    'variables' => [
+      // Allowed values are `normal`, `medium` and `bold`.
+      // We can't call this variable `#weight`, as it will mess with Drupal's
+      // render array.
+      'element' => [],
+    ],
+  ];
+  
+  
+  // Wrapper for a email and call buttons in person cards.
+  $info['server_theme_contact_actions'] = [
+    'variables' => [
+      'email' => NULL,
+      'call' => NULL,
+    ],
+  ];
 
   return $info;
 }
