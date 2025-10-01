@@ -1,0 +1,5 @@
+name: "PEVB (Pluggable Entity View Builder)"
+type: module
+description: "General and common functionality"
+core_version_requirement: ^9 || ^10
+package: "server"
